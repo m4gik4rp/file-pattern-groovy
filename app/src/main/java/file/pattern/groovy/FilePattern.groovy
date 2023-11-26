@@ -1,6 +1,10 @@
 // FilePattern.groovy
 
 import java.io.File
+import java.io.File
+import java.nio.file.Paths
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 class Main {
 
@@ -15,8 +19,17 @@ class Main {
         return userInput
     }
 
-    def backUpFile(){
+    def backUpFile(String oldFileName){
+        def sourceFilePath = "app/src/main/resources/samplefiles/" + oldFileName
+        // Specify the path to the destination folder
+        def destinationFolderPath = "app/src/main/resources/backup/"
+        // Create Path objects for the source file and destination folder
+        def sourcePath = Paths.get(sourceFilePath)
+        def destinationPath = Paths.get(destinationFolderPath)
 
+        // Copy the file to the destination folder
+        Files.copy(sourcePath, destinationPath.resolve(sourcePath.fileName), StandardCopyOption.REPLACE_EXISTING)
+        printf("File %s has been backed up in %s \n", oldFileName, destinationFolderPath+oldFileName)
     }
 
     def start() {
@@ -59,6 +72,8 @@ class Main {
             for (element in matchingElements) {
                 printf("file number %d: %s%n", (counter+1), element, counter++)
             }
+
+            backUpFile(matchingElements[0])
 
 
             } else {

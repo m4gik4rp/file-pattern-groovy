@@ -5,12 +5,15 @@ import java.nio.file.StandardCopyOption
 
 class Main {
 
-    def backUpFile(String oldFileName) {
-        def sourceFilePath = "app/src/main/resources/samplefiles/" + oldFileName
+    def backUpFile(String oldFileName, sourceDirectoryPath) {
+
+        def sourceDirectory = sourceDirectoryPath+ "/" + oldFileName
+
         // Specify the path to the destination folder
         def destinationFolderPath = "app/src/main/resources/backup/"
+
         // Create Path objects for the source file and destination folder
-        def sourcePath = Paths.get(sourceFilePath)
+        def sourcePath = Paths.get(sourceDirectory)
         def destinationPath = Paths.get(destinationFolderPath)
 
         // Copy the file to the destination folder
@@ -19,16 +22,25 @@ class Main {
     }
 
     def searchFile(List<String> listOfAllFiles) {
+
         print("Please Enter the file name You want to search: ")
         def fileName = System.console().readLine()
+
         // Filter and keep only the elements that contain the substring
         def matchingElements = listOfAllFiles.findAll { element ->
             element.contains(fileName)
         }
-        return matchingElements
+
+        if(matchingElements.isEmpty()){
+            println("No matches found.")
+        }
+        else{
+            return matchingElements
+        }
+        
     }
 
-    def renameFile(List<String> listOfAllFiles){
+    def renameFile(List<String> listOfAllFiles, String sourceDirectoryPath){
         
         def matchedFiles = searchFile(listOfAllFiles)
 
@@ -38,38 +50,41 @@ class Main {
                 counter++
             }
 
+        if(matchedFiles!= null){
+            print("Enter the number of the file you want to rename: ")
+            def choice = System.console().readLine()
 
-        print("Enter the number of the file you want to rename: ")
-        def choice = System.console().readLine()
+            // Specify the new name for the file
+            print("Enter the new name: ")
+            def newFileName = System.console().readLine()
+            // Specify the path to the existing file
+            def oldFilePath = sourceDirectoryPath + "/" + matchedFiles[(choice.toInteger()-1)]
 
-        // Specify the new name for the file
-        print("Enter the new name: ")
-        def newFileName = System.console().readLine()
-        // Specify the path to the existing file
-        def oldFilePath = "app/src/main/resources/samplefiles/" + matchedFiles[(choice.toInteger()-1)]
+            backUpFile(matchedFiles[(choice.toInteger()-1)],sourceDirectoryPath)
 
-        backUpFile(matchedFiles[(choice.toInteger()-1)])
+            // Create a File object for the existing file
+            def oldFile = new File(oldFilePath)
 
-        // Create a File object for the existing file
-        def oldFile = new File(oldFilePath)
+            // Create a File object for the new file (with the new name)
+            def newFile = new File(oldFile.parent, newFileName+".txt")
 
-        // Create a File object for the new file (with the new name)
-        def newFile = new File(oldFile.parent, newFileName+".txt")
-
-        // Rename the file
-        if (oldFile.renameTo(newFile)) {
-            println("File successfully renamed.")
-        } else {
-            println("Failed to rename the file.")
+            // Rename the file
+            if (oldFile.renameTo(newFile)) {
+                println("File successfully renamed.")
+            } else {
+                println("Failed to rename the file.")
+            }
         }
+        
     }
+    
 
-    def mainMenu(List<String> listOfAllFiles) {
+    def mainMenu(List<String> listOfAllFiles, String sourceDirectoryPath) {
         println "Choose an option:"
         println "1. View all files in directory"
         println "2. Search files"
         println "3. Rename"
-        println "4. Delete"
+        println "4. Exit"
         print "Enter your choice: "
         def choice = System.console().readLine()
 
@@ -85,18 +100,29 @@ class Main {
             }
         } else if (choice.toInteger() == 3) {
             println("--Rename--")
-            renameFile(listOfAllFiles)
+            renameFile(listOfAllFiles, sourceDirectoryPath)
         } else if (choice.toInteger() == 4) {
-            println("Delete")
+            println("--Exit--")
+            println("Program done.")
+            control = false
         } else {
             println("Invalid choice")
         }
+        return true
+        
     }
 
     def start() {
+        def control = true
+
         println("Welcome to text file searcher and replacer!")
+        println("Enter the absolute directory path you want to use: ")
+
         // Specify the path to the directory
-        def directoryPath = "app/src/main/resources/samplefiles"
+        def directoryPath = System.console().readLine()
+
+        // Replace backslashes with forward slashes
+        def convertedDirectoryPath = (directoryPath.replace("\\", "/"))
 
         // Create a File object based on the directory path
         def directory = new File(directoryPath)
@@ -109,24 +135,25 @@ class Main {
             return
         }
 
-        // Check if the specified path is a directory
-        if (directory.isDirectory()) {
-            // Get the list of files in the directory
-            def fileList = directory.listFiles()
+        while(control){
+            // Check if the specified path is a directory
+            if (directory.isDirectory()) {
+                // Get the list of files in the directory
+                def fileList = directory.listFiles()
 
-            // Get the list of file names in the directory that end with '.txt'
-            def txtFiles = directory.listFiles { file ->
-                file.isFile() && file.name.endsWith('.txt')
-            }.collect { file ->
-                file.name
+                // Get the list of file names in the directory that end with '.txt'
+                def txtFiles = directory.listFiles { file ->
+                    file.isFile() && file.name.endsWith('.txt')
+                }.collect { file ->
+                    file.name
+                }
+                control = mainMenu(txtFiles, directoryPath)
             }
+            else {
+                println("The specified path is not a directory.")
+            } 
 
-            mainMenu(txtFiles)
-            // Additional logic can be added here based on the user's choice
-
-        } else {
-            println("The specified path is not a directory.")
-        }
+        } 
     }
 }
 

@@ -31,11 +31,17 @@ class Main {
             // Get the list of files in the directory
             def fileList = directory.listFiles()
 
-            // Print the names of the files
-            fileList.each { file ->
-                println(file.name)
+            // Get the list of files in the directory
+            def txtFiles = directory.listFiles { file ->
+                file.isFile() && file.name.endsWith('.txt')
             }
-        } else {
+
+            // Print the names of the .txt files
+            txtFiles.each { txtFile ->
+                println(txtFile.name)
+            }
+            
+            } else {
             println("The specified path is not a directory.")
         }
     }

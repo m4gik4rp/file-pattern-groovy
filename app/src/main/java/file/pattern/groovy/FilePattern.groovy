@@ -104,7 +104,7 @@ class Main {
         } else if (choice.toInteger() == 4) {
             println("--Exit--")
             println("Program done.")
-            control = false
+            return false
         } else {
             println("Invalid choice")
         }

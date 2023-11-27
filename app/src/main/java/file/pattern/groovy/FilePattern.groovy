@@ -62,19 +62,19 @@ class Main {
 
             backUpFile(matchedFiles[(choice.toInteger()-1)],sourceDirectoryPath)
 
-            // Create a File object for the existing file
-            def oldFile = new File(oldFilePath)
+                // Create a File object for the existing file
+                def oldFile = new File(oldFilePath)
 
-            // Create a File object for the new file (with the new name)
-            def newFile = new File(oldFile.parent, newFileName+".txt")
+                // Create a File object for the new file (with the new name)
+                def newFile = new File(oldFile.parent, newFileName+".txt")
 
-            // Rename the file
-            if (oldFile.renameTo(newFile)) {
-                println("File successfully renamed.")
-            } else {
-                println("Failed to rename the file.")
-            }
-        }
+                // Rename the file
+                if (oldFile.renameTo(newFile)) {
+                    println("File successfully renamed.")
+                } else {
+                    println("Failed to rename the file.")
+                }
+}
         
     }
     
@@ -147,7 +147,7 @@ class Main {
                 }.collect { file ->
                     file.name
                 }
-                control = mainMenu(txtFiles, directoryPath)
+                control = mainMenu(txtFiles, convertedDirectoryPath)
             }
             else {
                 println("The specified path is not a directory.")

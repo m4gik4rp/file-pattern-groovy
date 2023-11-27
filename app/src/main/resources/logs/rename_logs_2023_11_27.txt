@@ -1,0 +1,9 @@
+Renaming process started at Mon Nov 27 15:39:07 CST 2023
+Renaming file: newtest1.txt to test1.txt
+Pattern "newtest" found in file: newtest1.txt
+Renaming file: newtest2.txt to test2.txt
+Pattern "newtest" found in file: newtest2.txt
+Renaming file: newtest3.txt to test3.txt
+Pattern "newtest" found in file: newtest3.txt
+Renaming process completed at Mon Nov 27 15:39:07 CST 2023
+=========================================

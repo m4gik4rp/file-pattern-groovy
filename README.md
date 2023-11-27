@@ -54,20 +54,32 @@ sudo apt install groovy
 ```
 
 ## Usage
-#### Note: If You experience issues with runing the scripts below try changing the **End Of Line Sequence** of the files. If You encounter **JAVA_HOME** issues with groovy find your jdk and manually export it in the terminal example:
+#### Note: If You experience issues with running the scripts below try changing the **End Of Line Sequence** of the files. If You encounter **JAVA_HOME** issues with groovy find your jdk and manually export it in the terminal example:
 ```bash
 # I suggest encapsulate them with qoutation marks '"'
 export JAVA_HOME="C:\Program Files\Java\jdk-17.0.2"
 ```
 + For Interactive **(Official attempt)**
 ```bash
+# I suggest use git bash for terminal
 bash runGroovy.sh
 ```
+```bash
+# Welcome to text file searcher and replacer!
+# Enter the absolute directory path you want to use: 
+app\src\main\resources\samplefiles
+```
+
 + For Command Line
 ```bash
 # Encapsulate them with qoutation marks '"'
-bash runCLGroovy.sh "<absolute path" "<file name to search>" "<new file name>"
+bash runCLGroovy.sh "<absolute path>" "<file name to search>" "<new file name>"
 ```
+```bash
+# Sample
+bash runCLGroovy.sh "app\src\main\resources\samplefiles" "test" "newtest"
+```
+
 ## Future Releases
 ### CLGroovy
 + Log retention 

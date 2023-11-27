@@ -17,9 +17,7 @@ Since I'm relatively new to Groovy, I sought guidance from ChatGPT for examples 
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Future Release](#future-releases)
 
 ## Installation
 
@@ -56,11 +54,22 @@ sudo apt install groovy
 ```
 
 ## Usage
+#### Note: If You experience issues with runing the scripts below try changing the **End Of Line Sequence** of the files. If You encounter **JAVA_HOME** issues with groovy find your jdk and manually export it in the terminal example:
+```bash
+# I suggest encapsulate them with qoutation marks '"'
+export JAVA_HOME="C:\Program Files\Java\jdk-17.0.2"
+```
 + For Interactive **(Official attempt)**
 ```bash
 bash runGroovy.sh
 ```
 + For Command Line
 ```bash
+# Encapsulate them with qoutation marks '"'
 bash runCLGroovy.sh "<absolute path" "<file name to search>" "<new file name>"
 ```
+## Future Releases
+### CLGroovy
++ Log retention 
++ Add confirmation prompt if multiple files will be renamed and display those files
++ Use Design Patterns (?)

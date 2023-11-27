@@ -3,6 +3,7 @@ import java.io.File
 import java.nio.file.Paths
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.text.SimpleDateFormat
 
 
 class Main {
@@ -41,64 +42,72 @@ class Main {
         
     }
 
-    def renameFile(List<String> listOfAllFiles, String sourceDirectoryPath, String textPattern, String replacerTextPattern){
+   
+    def renameFile(List<String> listOfAllFiles, String sourceDirectoryPath, String textPattern, String replacerTextPattern) {
         def logDirectory = "app/src/main/resources/logs"
-        def logFileName = "rename_logs.txt"
+
+        // Include the current date in the log filename
+        def dateFormat = new SimpleDateFormat("yyyy_MM_dd")
+        def currentDate = dateFormat.format(new Date())
+        def logFileName = "rename_logs_${currentDate}.txt"
+
         def logFilePath = "${logDirectory}/${logFileName}"
 
         def matchedFiles = searchFile(listOfAllFiles, textPattern)
 
-        def updatedFileNames = matchedFiles.collect { fileName ->
-            fileName.replaceAll(textPattern, replacerTextPattern)
-        }
 
-        // Log the process flow to a text file
-        def logFile = new File(logFilePath)
-        logFile.text = "Renaming process started at ${new Date()}\n"
-
-        // Backup and rename files
-        for (int i = 0; i < matchedFiles.size(); i++) {
-            def fileName = matchedFiles[i]
-            def updatedFileName = updatedFileNames[i]
-
-            try {
-                // Backup the file before renaming
-                backUpFile(fileName,sourceDirectoryPath)
-
-                def oldFilePath = sourceDirectoryPath + "/" + fileName
-                println("old file path is ${oldFilePath}")
-
-                // Log the renaming action
-                logFile.append("Renaming file: $fileName to $updatedFileName\n")
-
-                // Create a File object for the existing file
-                def oldFile = new File(oldFilePath)
-
-                // Create a File object for the new file (with the new name)
-                def newFile = new File(oldFile.parent, updatedFileName)
-
-                // Rename the file
-                if (oldFile.renameTo(newFile)) {
-                    println("File successfully renamed.")
-                } else {
-                    println("Failed to rename the file.")
-                }
-
-                // Log pattern found information
-                if (fileName.contains(replacerTextPattern)) {
-                    logFile.append("Pattern 'text' found in file: $fileName\n")
-                }
-            } catch (Exception e) {
-                // Log errors
-                logFile.append("Error processing file $fileName: ${e.message}\n")
-                println("Error processing file $fileName: ${e.message}")
+        if (matchedFiles != null) {
+            def updatedFileNames = matchedFiles.collect { fileName ->
+                fileName.replaceAll(textPattern, replacerTextPattern)
             }
 
-        }
-        logFile.append("Renaming process completed at ${new Date()}\n")
+            // Log the process flow to a text file
+            def logFile = new File(logFilePath)
+            logFile.append("Renaming process started at ${new Date()}\n")
 
+            // Backup and rename files
+            for (int i = 0; i < matchedFiles.size(); i++) {
+                def fileName = matchedFiles[i]
+                def updatedFileName = updatedFileNames[i]
+
+                try {
+                    // Backup the file before renaming
+                    backUpFile(fileName, sourceDirectoryPath)
+
+                    def oldFilePath = sourceDirectoryPath + "/" + fileName
+                    println("old file path is ${oldFilePath}")
+
+                    // Log the renaming action
+                    logFile.append("Renaming file: $fileName to $updatedFileName\n")
+
+                    // Create a File object for the existing file
+                    def oldFile = new File(oldFilePath)
+
+                    // Create a File object for the new file (with the new name)
+                    def newFile = new File(oldFile.parent, updatedFileName)
+
+                    // Rename the file
+                    if (oldFile.renameTo(newFile)) {
+                        println("File successfully renamed.")
+                    } else {
+                        println("Failed to rename the file.")
+                    }
+
+                    println("filename is ${fileName}")
+                    // Log pattern found information
+                    if (fileName.contains(textPattern)) {
+                        logFile.append("Pattern \"${textPattern}\" found in file: $fileName\n")
+                    }
+                } catch (Exception e) {
+                    // Log errors
+                    logFile.append("Error processing file $fileName: ${e.message}\n")
+                    println("Error processing file $fileName: ${e.message}")
+                }
+            }
+            logFile.append("Renaming process completed at ${new Date()}\n")
+            logFile.append("=========================================\n")  // Add a separator for each run
+        }
     }
-    
 
     def mainMenu(List<String> listOfAllFiles, String sourceDirectoryPath, String textPattern, String replacerTextPattern) {
         println "Choose an option:"
@@ -174,10 +183,10 @@ class Main {
         } else {
             println "Not enough command line arguments provided. Usage: script.groovy <directoryPath> <textPattern> <replacerTextPattern>"
         }    
-
     }
 }
 
 // Create an instance of the main class and call the start method
 def mainInstance = new Main()
+// Pass the command line arguments to the function
 mainInstance.start(args)
